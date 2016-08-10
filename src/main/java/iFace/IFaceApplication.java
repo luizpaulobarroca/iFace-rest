@@ -41,7 +41,7 @@ public class IFaceApplication extends io.dropwizard.Application<IFaceConfigurati
     };
 
     public static void main(String[] args) throws Exception {
-        new IFaceApplication().run(args);
+        new IFaceApplication().run(new String[]{"server", "config.yaml"});
     }
 
     private Class[] getEntities() { //<-- Isso aqui é para o hibernate procurar todas as classes que tem no pacote modelo, para ele criar as tabelas

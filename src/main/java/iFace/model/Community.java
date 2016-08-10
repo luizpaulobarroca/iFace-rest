@@ -30,7 +30,10 @@ public class Community {
             inverseJoinColumns = @JoinColumn(name = "userId"))
     protected List<User> members = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     protected User owner;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    protected List<Messages> messages = new ArrayList<>();
 
 }

@@ -26,6 +26,9 @@ public class UserResource {
         User user = userDao.retrive(id);
 
         Hibernate.initialize(user.getFriends());
+        Hibernate.initialize(user.getFriendRequest());
+        Hibernate.initialize(user.getCommunities());
+        Hibernate.initialize(user.getManagedCommunities());
 
         return Response.ok(user).build();
     }
@@ -46,6 +49,18 @@ public class UserResource {
         User user = userDao.retrive(id);
 
         if (user != null) {
+
+            if(user.getFriends() != null) {
+                List<User> friendslist = user.getFriends();
+                for(User x : friendslist) {
+                    List<User> xfriendslist = x.getFriends();
+                    xfriendslist.remove(user);
+                    x.setFriends(xfriendslist);
+                    userDao.create(x);
+                    friendslist.remove(x);
+                }
+                user.setFriends(friendslist);
+            }
             userDao.delete(user);
             return Response.ok().build();
         } else {

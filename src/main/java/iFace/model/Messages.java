@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Date;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -20,7 +17,14 @@ public class Messages {
     protected long id;
 
     protected String message;
-    protected String sender;
-    protected Date date;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    protected Community community;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    protected User sender;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    protected User receiver;
 
 }

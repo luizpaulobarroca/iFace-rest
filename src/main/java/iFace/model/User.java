@@ -37,7 +37,10 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
     protected List<Community> communities = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "owner")
     protected List<Community> managedCommunities = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "receiver")
+    protected  List<Messages> messages = new ArrayList<>();
 
 }

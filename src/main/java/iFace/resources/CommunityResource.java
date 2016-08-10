@@ -28,6 +28,9 @@ public class CommunityResource {
     public Response getUser(@PathParam("id") Long id) {
         Community community = communityDAO.retrive(id);
 
+        Hibernate.initialize(community.getMessages());
+        Hibernate.initialize(community.getMembers());
+
         return Response.ok(community).build();
     }
 

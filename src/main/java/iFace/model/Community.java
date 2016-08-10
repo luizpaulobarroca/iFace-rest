@@ -3,6 +3,7 @@ package iFace.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,10 +31,11 @@ public class Community {
             inverseJoinColumns = @JoinColumn(name = "userId"))
     protected List<User> members = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference
     protected User owner;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "community")
     protected List<Messages> messages = new ArrayList<>();
 
 }

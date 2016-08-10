@@ -30,6 +30,7 @@ public class CommunityResource {
 
         Hibernate.initialize(community.getMessages());
         Hibernate.initialize(community.getMembers());
+        Hibernate.initialize(community.getOwner());
 
         return Response.ok(community).build();
     }

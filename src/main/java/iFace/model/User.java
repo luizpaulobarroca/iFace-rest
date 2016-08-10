@@ -1,6 +1,7 @@
 package iFace.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
@@ -37,7 +38,8 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
     protected List<Community> communities = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "owner")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @JsonBackReference
     protected List<Community> managedCommunities = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "receiver")

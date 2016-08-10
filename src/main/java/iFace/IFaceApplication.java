@@ -1,9 +1,11 @@
 package iFace;
 
 import iFace.dao.CommunityDAO;
+import iFace.dao.MessagesDAO;
 import iFace.dao.UserDAO;
 import iFace.model.User;
 import iFace.resources.CommunityResource;
+import iFace.resources.MessagesResource;
 import iFace.resources.UserResource;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
@@ -85,9 +87,11 @@ public class IFaceApplication extends io.dropwizard.Application<IFaceConfigurati
         //Isso aqui é para dizer que tem serviços na classe UserResource e ele utilizará o dao UserDAO
         final UserDAO userDao = new UserDAO(hibernate.getSessionFactory());
         final CommunityDAO communityDAO = new CommunityDAO(hibernate.getSessionFactory());
+        final MessagesDAO messagesDAO = new MessagesDAO(hibernate.getSessionFactory());
 
         e.jersey().register(new UserResource(userDao));
         e.jersey().register(new CommunityResource(communityDAO));
+        e.jersey().register(new MessagesResource(messagesDAO));
 
     }
 

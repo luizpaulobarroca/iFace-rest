@@ -1,12 +1,12 @@
 package iFace;
 
 public class IFaceErrors {
-    private int number;
-    private String message;
 
-    public IFaceErrors(int number, String message) {
-        this.number = number;
-        this.message = message;
+    public static String response(String message) {
+        String string;
+
+        string = "{ \"message\": \"" + message + "\"}";
+
+        return string;
     }
-
 }

@@ -1,11 +1,13 @@
 package iFace.resources;
 
+import iFace.IFaceErrors;
 import iFace.dao.CommunityDAO;
-import iFace.dao.UserDAO;
 import iFace.model.Community;
 import iFace.model.User;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.Hibernate;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -28,9 +30,14 @@ public class CommunityResource {
     public Response getCommunity(@PathParam("id") Long id) {
         Community community = communityDAO.retrive(id);
 
-        Hibernate.initialize(community.getMembers());
-        Hibernate.initialize(community.getOwner());
-        Hibernate.initialize(community.getMessages());
+        try {
+            Hibernate.initialize(community.getMembers());
+            Hibernate.initialize(community.getOwner());
+            Hibernate.initialize(community.getMessages());
+        } catch (Exception e) {
+            String error = IFaceErrors.response("Community not found.");
+            return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+        }
 
         return Response.ok(community).build();
     }
@@ -40,9 +47,24 @@ public class CommunityResource {
     @UnitOfWork
     public Response createCommunity(@PathParam("id") Long id, Community community) {
         Community communityIn = communityDAO.create(community);
-        User user = new User();
-        user.setId(id);
+        User user;
+
+        Session session = communityDAO.factory.openSession();
+
+        Query query = session.createQuery("from User where id = :id");
+        query.setParameter("id", id);
+
+        user = (User) query.uniqueResult();
+
+        session.close();
+
+        if(user == null) {
+            String error = IFaceErrors.response("User not found.");
+            return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+        }
+
         community.setOwner(user);
+
         return Response.ok(communityIn).build();
     }
 
@@ -52,9 +74,13 @@ public class CommunityResource {
     public Response updateCommunity(@PathParam("id") Long id,Community community) {
         Community communityIn = communityDAO.retrive(id);
 
-        communityIn.setName(community.getName());
-        communityIn.setDescription(community.getDescription());
-        communityIn.setOwner(community.getOwner());
+        try {
+            communityIn.setName(community.getName());
+            communityIn.setDescription(community.getDescription());
+        } catch (Exception e) {
+            String error = IFaceErrors.response("Community not found.");
+            return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+        }
 
         communityIn = communityDAO.update(communityIn);
         return Response.ok(communityIn).build();
@@ -68,33 +94,41 @@ public class CommunityResource {
         return Response.ok(communities).build();
     }
 
-    @DELETE
-    @Path("/{id}")
-    @UnitOfWork
-    public Response deleteCommunity(@PathParam("id") Long id) {
-
-        Community community = communityDAO.retrive(id);
-
-        if (community != null) {
-            communityDAO.delete(community);
-            return Response.ok().build();
-        } else {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-
-    }
-
     @POST
     @Path("/{id}/add/{id2}")
     @UnitOfWork
-    public Response addUser(@PathParam("id") Long id, @PathParam("id2") Long id2) {
+    public Response addMember(@PathParam("id") Long id, @PathParam("id2") Long id2) {
         Community community = communityDAO.retrive(id);
+        List<User> members;
 
-        List<User> members = community.getMembers();
-        User user = new User();
-        user.setId(id2);
+       try {
+           members = community.getMembers();
+       } catch (Exception e) {
+           String error = IFaceErrors.response("Community not found.");
+           return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+       }
+
+        Session session = communityDAO.factory.openSession();
+
+        Query query = session.createQuery("from User where id = :id");
+        query.setParameter("id", id2);
+
+        User user = (User) query.uniqueResult();
+
+        session.close();
+
+        if(user == null) {
+            String error = IFaceErrors.response("User not found.");
+            return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+        }
+
+        if(community.getMembers().contains(user)) {
+            String error = IFaceErrors.response("User already a member.");
+            return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+        }
+
+
         members.add(user);
-
         community = communityDAO.update(community);
 
         return Response.ok(community).build();

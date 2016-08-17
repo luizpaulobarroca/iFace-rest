@@ -24,4 +24,9 @@ public class IFaceConfiguration extends Configuration {
     @JsonProperty
     @NotEmpty
     private String bearerRealm;
+    
+    @JsonProperty("database")
+    public DataSourceFactory getDataSourceFactory() {
+        return database;
+    }
 }

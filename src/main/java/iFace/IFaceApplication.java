@@ -39,7 +39,7 @@ public class IFaceApplication extends io.dropwizard.Application<IFaceConfigurati
     private HibernateBundle<IFaceConfiguration> hibernate = new HibernateBundle<IFaceConfiguration>(User.class, getEntities()) {
         @Override
         public DataSourceFactory getDataSourceFactory(IFaceConfiguration configuration) {
-            return configuration.getDatabase();
+            return configuration.getDataSourceFactory();
         }
     };
 
@@ -47,7 +47,8 @@ public class IFaceApplication extends io.dropwizard.Application<IFaceConfigurati
         new IFaceApplication().run(new String[]{"server", "config.yaml"});
     }
 
-    private Class[] getEntities() { //<-- Isso aqui é para o hibernate procurar todas as classes que tem no pacote modelo, para ele criar as tabelas
+	@SuppressWarnings("rawtypes")
+	private Class[] getEntities() { //<-- Isso aqui é para o hibernate procurar todas as classes que tem no pacote modelo, para ele criar as tabelas
         List<ClassLoader> classLoadersList = new LinkedList();
         classLoadersList.add(ClasspathHelper.contextClassLoader());
         classLoadersList.add(ClasspathHelper.staticClassLoader());

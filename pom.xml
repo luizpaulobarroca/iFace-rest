@@ -15,26 +15,6 @@
         <dropwizard.version>1.0.0</dropwizard.version>
     </properties>
 
-    <!--<dependencyManagement>-->
-        <!--<dependencies>-->
-            <!--<dependency>-->
-                <!--<groupId>io.dropwizard</groupId>-->
-                <!--<artifactId>dropwizard-bom</artifactId>-->
-                <!--<version>${project.version}</version>-->
-                <!--<type>pom</type>-->
-                <!--<scope>import</scope>-->
-            <!--</dependency>-->
-        <!--</dependencies>-->
-    <!--</dependencyManagement>-->
-
-    <!--<repositories>-->
-        <!--<repository>-->
-            <!--<id>unknown-jars-temp-repo</id>-->
-            <!--<name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>-->
-            <!--<url>file:${project.basedir}/lib</url>-->
-        <!--</repository>-->
-    <!--</repositories>-->
-
     <dependencies>
 
         <dependency>

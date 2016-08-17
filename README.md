@@ -1,8 +1,13 @@
 # iFace-rest
 Rest Service for iFace
 
-# Database
+# Need:
+## Database
 Name: iface
+## Lombok
+http://jnb.ociweb.com/jnb/jnbJan2010.html#installation
+## Main Class
+IFaceApplication
 
 # Urls
 - GET /community/all (iFace.resources.CommunityResource)

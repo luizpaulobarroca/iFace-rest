@@ -11,6 +11,7 @@ import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.joda.time.DateTimeZone;
 import org.reflections.Reflections;
@@ -92,6 +93,9 @@ public class IFaceApplication extends io.dropwizard.Application<IFaceConfigurati
         e.jersey().register(new UserResource(userDao));
         e.jersey().register(new CommunityResource(communityDAO));
         e.jersey().register(new MessagesResource(messagesDAO));
+
+//        e.jersey().register(HttpSessionProvider.class);
+//        e.servlets().setSessionHandler(new SessionHandler());
 
     }
 

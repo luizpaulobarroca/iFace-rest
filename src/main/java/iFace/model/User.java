@@ -1,8 +1,7 @@
 package iFace.model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,17 +14,18 @@ import java.util.List;
 @JsonInclude(Include.NON_NULL)
 @Getter
 @Setter
+@JsonIdentityInfo(property = "id", generator = ObjectIdGenerators.PropertyGenerator.class)
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
 
-    @Column
     protected String name;
     protected String username;
-    protected String email;
     protected String password;
+
+    protected String email;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserFriends", joinColumns = @JoinColumn(name = "User1"), inverseJoinColumns = @JoinColumn(name = "User2"))
@@ -38,11 +38,12 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
     protected List<Community> communities = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    @JsonBackReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     protected List<Community> managedCommunities = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "receiver")
-    protected  List<Messages> messages = new ArrayList<>();
+    protected  List<Messages> messagesReceived = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sender")
+    protected  List<Messages> messagesSent = new ArrayList<>();
 }

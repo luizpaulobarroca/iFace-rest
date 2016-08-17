@@ -1,9 +1,8 @@
 package iFace.model;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,10 +14,11 @@ import java.util.List;
 @JsonInclude(Include.NON_NULL)
 @Getter
 @Setter
+@JsonIdentityInfo(property = "id", generator = ObjectIdGenerators.PropertyGenerator.class)
 public class Community {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
 
     protected String name;
@@ -32,7 +32,6 @@ public class Community {
     protected List<User> members = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference
     protected User owner;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "community")

@@ -25,27 +25,45 @@ public class CommunityResource {
     @GET
     @Path("/{id}")
     @UnitOfWork
-    public Response getUser(@PathParam("id") Long id) {
+    public Response getCommunity(@PathParam("id") Long id) {
         Community community = communityDAO.retrive(id);
 
-        Hibernate.initialize(community.getMessages());
         Hibernate.initialize(community.getMembers());
         Hibernate.initialize(community.getOwner());
+        Hibernate.initialize(community.getMessages());
 
         return Response.ok(community).build();
     }
 
     @POST
+    @Path("/owner/{id}")
     @UnitOfWork
-    public Response createCommunity(Community community) {
+    public Response createCommunity(@PathParam("id") Long id, Community community) {
         Community communityIn = communityDAO.create(community);
+        User user = new User();
+        user.setId(id);
+        community.setOwner(user);
+        return Response.ok(communityIn).build();
+    }
+
+    @POST
+    @Path("/{id}")
+    @UnitOfWork
+    public Response updateCommunity(@PathParam("id") Long id,Community community) {
+        Community communityIn = communityDAO.retrive(id);
+
+        communityIn.setName(community.getName());
+        communityIn.setDescription(community.getDescription());
+        communityIn.setOwner(community.getOwner());
+
+        communityIn = communityDAO.update(communityIn);
         return Response.ok(communityIn).build();
     }
 
     @GET
     @Path("/all")
     @UnitOfWork
-    public Response getAllUser() {
+    public Response getAllCommunities() {
         List<Community> communities = communityDAO.retrieveAll();
         return Response.ok(communities).build();
     }
@@ -53,7 +71,7 @@ public class CommunityResource {
     @DELETE
     @Path("/{id}")
     @UnitOfWork
-    public Response deleteUser(@PathParam("id") Long id) {
+    public Response deleteCommunity(@PathParam("id") Long id) {
 
         Community community = communityDAO.retrive(id);
 
@@ -65,12 +83,20 @@ public class CommunityResource {
         }
 
     }
-//
-//    @POST
-//    @Path("/{id}/add/{id2}")
-//    @UnitOfWork
-//    public Response addUser(@PathParam("id") Long id, @PathParam("id2") Long id2) {
-//        Community community = communityDAO.retrive(id);
-//        return Response.ok(community).build();
-//    }
+
+    @POST
+    @Path("/{id}/add/{id2}")
+    @UnitOfWork
+    public Response addUser(@PathParam("id") Long id, @PathParam("id2") Long id2) {
+        Community community = communityDAO.retrive(id);
+
+        List<User> members = community.getMembers();
+        User user = new User();
+        user.setId(id2);
+        members.add(user);
+
+        community = communityDAO.update(community);
+
+        return Response.ok(community).build();
+    }
 }

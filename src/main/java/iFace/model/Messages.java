@@ -1,19 +1,21 @@
 package iFace.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIdentityInfo(property = "id", generator = ObjectIdGenerators.PropertyGenerator.class)
 public class Messages {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
 
     protected String message;
@@ -26,5 +28,8 @@ public class Messages {
 
     @ManyToOne(fetch = FetchType.EAGER)
     protected User receiver;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    protected Date date;
 
 }

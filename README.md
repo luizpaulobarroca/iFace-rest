@@ -2,12 +2,17 @@
 Rest Service for iFace
 
 # Need:
-## Database
+## Database (MYSQL)
 Name: iface
 ## Lombok
 http://jnb.ociweb.com/jnb/jnbJan2010.html#installation
 ## Main Class
 IFaceApplication
+
+## POSTMAN
+https://www.getpostman.com/
+Use postman to do the resquests. Send the data as JSON.
+Entitys modelled on package iFace.model
 
 # Urls
 - GET /community/all (iFace.resources.CommunityResource)
